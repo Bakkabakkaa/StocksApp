@@ -1,43 +1,48 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace Entities;
+namespace ServiceContracts.DTO;
 
 /// <summary>
-/// Represents a sell order to sell the stocks
+/// DTO class that represents a sell order -
+/// that can be used as return type of Stocks service
 /// </summary>
-public class SellOrder
+public class SellOrderResponse
 {
     /// <summary>
     /// The unique ID of the sell order
     /// </summary>
     public Guid SellOrderID { get; set; }
-    
+
+
     /// <summary>
     /// The unique symbol of the stock
     /// </summary>
-    [Required(ErrorMessage = "Stock Symbol can't be null or empty")]
     public string StockSymbol { get; set; }
-    
+
+
     /// <summary>
     /// The company name of the stock
     /// </summary>
-    [Required(ErrorMessage = "Stock Name can't be null or empty")]
     public string StockName { get; set; }
-    
+
+
     /// <summary>
     /// Date and time of order, when it is placed by the user
     /// </summary>
     public DateTime DateAndTimeOfOrder { get; set; }
-    
+
+
     /// <summary>
-    /// The number of stocks (share) to sell
+    /// The number of stocks (shares) to sell
     /// </summary>
-    [Range(1, 100000, ErrorMessage = "You can buy maximum of 100000 shares in single order. Minimum is 1.")]
     public uint Quantity { get; set; }
-    
+
+
     /// <summary>
     /// The price of each stock (share)
     /// </summary>
-    [Range(1, 10000, ErrorMessage = "The maximum price of stock is 10000. Minimum is 1")]
-    public uint Price { get; set; }
+    public double Price { get; set; }
+
+    /// <summary>
+    /// Total sales amount
+    /// </summary>
+    public double TradeAmount { get; set; }
 }

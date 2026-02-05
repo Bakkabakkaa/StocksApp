@@ -1,17 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Entities;
+namespace ServiceContracts.DTO;
 
 /// <summary>
-/// Represents a sell order to sell the stocks
+/// DTO class that represents a sell order -
+/// that can be used while inserting / updating
 /// </summary>
-public class SellOrder
+public class SellOrderRequest
 {
-    /// <summary>
-    /// The unique ID of the sell order
-    /// </summary>
-    public Guid SellOrderID { get; set; }
-    
     /// <summary>
     /// The unique symbol of the stock
     /// </summary>
