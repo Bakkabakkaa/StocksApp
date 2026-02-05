@@ -1,3 +1,5 @@
+using Entities;
+
 namespace ServiceContracts.DTO;
 
 /// <summary>
@@ -45,4 +47,23 @@ public class BuyOrderResponse
     /// Total purchase amount
     /// </summary>
     public double TradeAmount { get; set; }
+}
+
+public static class BuyOrderExtensions
+{
+    /// <summary>
+    /// An extensions method to convert an object of BuyOrder class into BuyOrderResponse class
+    /// </summary>
+    /// <param name="buyOrder">The BuyOrder object to convert</param>
+    /// <returns>Returns the converted BuyOrderResponse object</returns>
+    public static BuyOrderResponse ToBuyOrderResponse(this BuyOrder buyOrder)
+    {
+        return new BuyOrderResponse()
+        {
+            BuyOrderID = buyOrder.BuyOrderID, StockSymbol = buyOrder.StockSymbol,
+            StockName = buyOrder.StockName, DateAndTimeOfOrder = buyOrder.DateAndTimeOfOrder,
+            Price = buyOrder.Price, Quantity = buyOrder.Quantity,
+            TradeAmount = buyOrder.Price * buyOrder.Quantity
+        };
+    }
 }
