@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Services.Helpers;
 
-public class ValidationHelpers
+public class ValidationHelper
 {
     /// <summary>
     /// Persons model validationContext and throws ArgumentException in case
