@@ -139,9 +139,140 @@ public class StocksServiceTest
 
     #endregion
 
+    #region CreateSellOrder
+
+    [Fact]
+    public void CreateSellOrder_NullSellOrder_ToBeArgumentNullException()
+    {
+        // Arrange
+        SellOrderRequest? sellOrderRequest = null;
+        
+        // Assert
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            // Act
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Theory]
+    [InlineData(0)]
+    public void CreateSellOrder_QuantityIsLessThanMinimum_ToBeArgumentException(uint sellOrderQuantity)
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        sellOrderRequest.Quantity = sellOrderQuantity;
+        
+        // Assert
+        Assert.Throws<ArgumentException>(() =>
+        {
+            // Act
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Theory]
+    [InlineData(100001)]
+    public void CreateSellOrder_QuantityIsGreaterThanMaximum_ToBeArgumentException(uint sellOrderQuantity)
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        sellOrderRequest.Quantity = sellOrderQuantity;
+        
+        // Assert
+        Assert.Throws<ArgumentException>(() =>
+        {
+            // Act
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Theory]
+    [InlineData(0)]
+    public void CreateSellOrder_PriceIsLessThanMinimum_ToBeArgumentException(uint sellOrderPrice)
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        sellOrderRequest.Price = sellOrderPrice;
+        
+        // Assert
+        Assert.Throws<ArgumentException>(() =>
+        {
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Theory]
+    [InlineData(10001)]
+    public void CreateSellOrder_PriceIsGreaterThanMaximum_ToBeArgumentException(uint sellOrderPrice)
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        sellOrderRequest.Price = sellOrderPrice;
+        
+        // Assert
+        Assert.Throws<ArgumentException>(() =>
+        {
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Fact]
+    public void CreateSellOrder_StockSymbolIsNull_ToBeArgumentException()
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        sellOrderRequest.StockSymbol = null;
+        
+        // Assert
+        Assert.Throws<ArgumentException>(() =>
+        {
+            // Act
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Fact]
+    public void CreateSellOrder_ValidData_ToBeSuccessful()
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        sellOrderRequest.DateAndTimeOfOrder = Convert.ToDateTime("1999-12-31");
+        
+        // Assert
+        Assert.Throws<ArgumentException>(() =>
+        {
+            _stockService.CreateSellOrder(sellOrderRequest);
+        });
+    }
+
+    [Fact]
+    public void CreateSellOrder_ValidData_ToBeSuccessful()
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        
+        // Act
+        SellOrderResponse sellOrderResponse = _stockService.CreateSellOrder(sellOrderRequest);
+        
+        // Assert
+        Assert.NotEqual(Guid.Empty, sellOrderResponse.SellOrderID);
+    }
+    
+    #endregion
+
     private BuyOrderRequest CreateValidBuyOrderRequest()
     {
         return new BuyOrderRequest()
+        {
+            StockSymbol = "MSFT", StockName = "Microsoft",
+            Price = 10, Quantity = 10
+        };
+    }
+    
+    private SellOrderRequest CreateValidSellOrderRequest()
+    {
+        return new SellOrderRequest()
         {
             StockSymbol = "MSFT", StockName = "Microsoft",
             Price = 10, Quantity = 10
