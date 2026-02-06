@@ -233,7 +233,7 @@ public class StocksServiceTest
     }
 
     [Fact]
-    public void CreateSellOrder_ValidData_ToBeSuccessful()
+    public void CreateSellOrder_DateOfOrderIsLessThanYear2000_ToBeArgumentException()
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
