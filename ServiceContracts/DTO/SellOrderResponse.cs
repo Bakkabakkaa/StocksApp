@@ -1,3 +1,5 @@
+using Entities;
+
 namespace ServiceContracts.DTO;
 
 /// <summary>
@@ -45,4 +47,18 @@ public class SellOrderResponse
     /// Total sales amount
     /// </summary>
     public double TradeAmount { get; set; }
+}
+
+public static class SellOrderExtensions
+{
+    public static SellOrderResponse ToSellOrderResponse(this SellOrder sellOrder)
+    {
+        return new SellOrderResponse()
+        {
+            SellOrderID = sellOrder.SellOrderID, StockSymbol = sellOrder.StockSymbol,
+            StockName = sellOrder.StockName, DateAndTimeOfOrder = sellOrder.DateAndTimeOfOrder,
+            Price = sellOrder.Price, Quantity = sellOrder.Quantity,
+            TradeAmount = sellOrder.Price * sellOrder.Quantity
+        };
+    }
 }
