@@ -30,6 +30,9 @@ public class TradeController : Controller
         _configuration = configuration;
     }
 
+    [Route("/")]
+    [Route("[action]")]
+    [Route("~/[controller]")]
     public IActionResult Index()
     {
         // Reset stock symbol if not exists
