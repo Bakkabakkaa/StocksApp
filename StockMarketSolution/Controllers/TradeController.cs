@@ -87,13 +87,37 @@ public class TradeController : Controller
             StockTrade stockTrade = new StockTrade()
             {
                 StockName = buyOrderRequest.StockName, Quantity = buyOrderRequest.Quantity,
-                Price = buyOrderRequest.Price
+                StockSymbol = buyOrderRequest.StockSymbol
             };
 
             return View("Index", stockTrade);
         }
         // Invoke service method
         BuyOrderResponse buyOrderResponse = _stockService.CreateBuyOrder(buyOrderRequest);
+
+        return RedirectToAction(nameof(Orders));
+    }
+
+    [HttpPost]
+    [Route("[action]")]
+    public IActionResult SellOrder(SellOrderRequest sellOrderRequest)
+    {
+        // Update date of order
+        sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
+        
+        // Re-validate the model object after updating the date
+        ModelState.Clear();
+        TryValidateModel(sellOrderRequest);
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            StockTrade stockTrade = new StockTrade() { StockName = sellOrderRequest.StockName, Quantity = sellOrderRequest.Quantity, StockSymbol = sellOrderRequest.StockSymbol };
+            return View("Index", stockTrade);
+        }
+        
+        // Invoke service method
+        SellOrderResponse sellOrderResponse = _stockService.CreateSellOrder(sellOrderRequest);
 
         return RedirectToAction(nameof(Orders));
     }
