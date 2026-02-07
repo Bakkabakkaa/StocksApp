@@ -47,6 +47,46 @@ public class BuyOrderResponse
     /// Total purchase amount
     /// </summary>
     public double TradeAmount { get; set; }
+
+    /// <summary>
+    /// Checks if the current object and other (parameter) object values match
+    /// </summary>
+    /// <param name="obj">Other object of BuyOrderResponse class, to compare</param>
+    /// <returns>True or false determines whether current object and other objects match</returns>
+    public override bool Equals(object? obj)
+    {
+        if (obj == null)
+            return false;
+        if (obj is not BuyOrderRequest)
+            return false;
+
+        BuyOrderResponse other = (BuyOrderResponse)obj;
+        return BuyOrderID == other.BuyOrderID &&
+               StockSymbol == other.StockSymbol &&
+               StockName == other.StockName &&
+               DateAndTimeOfOrder == other.DateAndTimeOfOrder &&
+               Quantity == other.Quantity &&
+               Price == other.Price;
+    }
+
+    /// <summary>
+    /// Returns an int value represents unique stock id of the current object
+    /// </summary>
+    /// <returns></returns>
+    public override int GetHashCode()
+    {
+        return StockSymbol.GetHashCode();
+    }
+
+    /// <summary>
+    /// Converts the current object into string which
+    /// includes the values of all properties
+    /// </summary>
+    /// <returns>A string with values of all properties of current object</returns>
+    public override string ToString()
+    {
+        return $"Buy Order ID: {BuyOrderID}, Stock Symbol: {StockSymbol}, Stock Name: {StockName}, Date and Time of Buy Order: {DateAndTimeOfOrder.ToString("dd MMM yyyy hh:mm ss tt")}, Quantity: {Quantity}, Buy Price: {Price}, Trade Amount: {TradeAmount}";
+    }
 }
 
 public static class BuyOrderExtensions
