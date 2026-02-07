@@ -18,7 +18,7 @@ public class ValidationHelper
         List<ValidationResult> validationResults = new List<ValidationResult>();
         
         // Validate the model object and get errors
-        bool isValid = Validator.TryValidateObject(obj, validationContext, validationResults);
+        bool isValid = Validator.TryValidateObject(obj, validationContext, validationResults, true);
 
         if (!isValid)
         {

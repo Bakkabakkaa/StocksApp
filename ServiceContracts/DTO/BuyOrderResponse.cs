@@ -57,7 +57,7 @@ public class BuyOrderResponse
     {
         if (obj == null)
             return false;
-        if (obj is not BuyOrderRequest)
+        if (obj is not BuyOrderResponse)
             return false;
 
         BuyOrderResponse other = (BuyOrderResponse)obj;

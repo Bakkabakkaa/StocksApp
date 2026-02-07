@@ -19,7 +19,7 @@ public class StockService : IStockService
     {
         // Validation: buyOrderRequest can't be null
         if (buyOrderRequest == null)
-            throw new ArgumentException(nameof(buyOrderRequest));
+            throw new ArgumentNullException(nameof(buyOrderRequest));
         
         // Model validate
         ValidationHelper.ModelValidation(buyOrderRequest);
@@ -41,7 +41,7 @@ public class StockService : IStockService
     {
         // Validation: sellOrderRequest can't be null
         if (sellOrderRequest == null)
-            throw new ArgumentException(nameof(sellOrderRequest));
+            throw new ArgumentNullException(nameof(sellOrderRequest));
         
         // Model validation
         ValidationHelper.ModelValidation(sellOrderRequest);
@@ -61,11 +61,17 @@ public class StockService : IStockService
 
     public List<BuyOrderResponse> GetBuyOrders()
     {
-        return null;
+        // Convert all BuyOrder objects into BuyOrderResponse objects
+        return _buyOrders
+            .OrderByDescending(temp => temp.DateAndTimeOfOrder)
+            .Select(temp => temp.ToBuyOrderResponse()).ToList();
     }
 
     public List<SellOrderResponse> GetSellOrders()
     {
-        return null;
+        // Convert all SellOrder objects into SellOrderResponse objects
+        return _sellOrders
+            .OrderByDescending(temp => temp.DateAndTimeOfOrder)
+            .Select(temp => temp.ToSellOrderResponse()).ToList();
     }
 }

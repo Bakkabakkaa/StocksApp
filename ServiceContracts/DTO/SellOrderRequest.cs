@@ -7,7 +7,7 @@ namespace ServiceContracts.DTO;
 /// DTO class that represents a sell order -
 /// that can be used while inserting / updating
 /// </summary>
-public class SellOrderRequest
+public class SellOrderRequest : IValidatableObject
 {
     /// <summary>
     /// The unique symbol of the stock

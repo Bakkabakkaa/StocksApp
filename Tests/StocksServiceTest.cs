@@ -261,21 +261,83 @@ public class StocksServiceTest
     
     #endregion
 
+    #region GetBuyOrders
+
+    [Fact]
+    public void GetAllBuyOrders_DefaultList_ToBeEmpty()
+    {
+        // Act
+        List<BuyOrderResponse> buyOrderResponseList = _stockService.GetBuyOrders();
+        
+        // Assert
+        Assert.Empty(buyOrderResponseList);
+    }
+
+    [Fact]
+    public void GetAllBuyOrders_WithFewBuyOrders_ToBeSuccessful()
+    {
+        // Arrange
+        BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
+        BuyOrderResponse buyOrderResponseFromAdd = _stockService.CreateBuyOrder(buyOrderRequest);
+        
+        // Act
+        List<BuyOrderResponse> buyOrderResponseListFromGet = _stockService.GetBuyOrders();
+        
+        // Assert
+        Assert.Contains(buyOrderResponseFromAdd, buyOrderResponseListFromGet);
+    }
+
+    #endregion
+    
+    #region GetSellOrders
+
+    [Fact]
+    public void GetAllSellOrders_DefaultList_ToBeEmpty()
+    {
+        // Act
+        List<SellOrderResponse> sellOrderResponses = _stockService.GetSellOrders();
+        
+        // Assert
+        Assert.Empty(sellOrderResponses);
+    }
+
+    [Fact]
+    public void GetAllSellOrders_WithFewSellOrders_ToBeSuccessful()
+    {
+        // Arrange
+        SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
+        SellOrderResponse sellOrderResponseFromAdd = _stockService.CreateSellOrder(sellOrderRequest);
+        
+        // Act
+        List<SellOrderResponse> sellOrderResponseListFromGet = _stockService.GetSellOrders();
+        
+        // Assert
+        Assert.Contains(sellOrderResponseFromAdd, sellOrderResponseListFromGet);
+    }
+
+    #endregion
+    
+    
+
     private BuyOrderRequest CreateValidBuyOrderRequest()
     {
         return new BuyOrderRequest()
         {
             StockSymbol = "MSFT", StockName = "Microsoft",
-            Price = 10, Quantity = 10
+            Price = 10, Quantity = 10,
+            DateAndTimeOfOrder = new DateTime(2026, 2, 3)
         };
     }
+    
+    
     
     private SellOrderRequest CreateValidSellOrderRequest()
     {
         return new SellOrderRequest()
         {
             StockSymbol = "MSFT", StockName = "Microsoft",
-            Price = 10, Quantity = 10
+            Price = 10, Quantity = 10,
+            DateAndTimeOfOrder = new DateTime(2026, 2, 3)
         };
     }
 }
