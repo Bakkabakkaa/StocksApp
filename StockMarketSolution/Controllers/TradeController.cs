@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using ServiceContracts;
+using ServiceContracts.DTO;
 using StockMarketSolution.Models;
 
 namespace StockMarketSolution.Controllers;
@@ -64,5 +65,36 @@ public class TradeController : Controller
         ViewBag.FinnhubToken = _configuration["FinnhubToken"];
 
         return View(stockTrade);
+    }
+
+    [HttpPost]
+    [Route("[action]")]
+    public IActionResult SellOrder(BuyOrderRequest buyOrderRequest)
+    {
+        // Update date of order
+        buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
+        
+        // Re-validate the model object after updating the date
+        ModelState.Clear();
+        TryValidateModel(buyOrderRequest);
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Errors = ModelState.Values.
+                SelectMany(v => v.Errors).
+                Select(e => e.ErrorMessage).ToList();
+
+            StockTrade stockTrade = new StockTrade()
+            {
+                StockName = buyOrderRequest.StockName, Quantity = buyOrderRequest.Quantity,
+                Price = buyOrderRequest.Price
+            };
+
+            return View("Index", stockTrade);
+        }
+        // Invoke service method
+        BuyOrderResponse buyOrderResponse = _stockService.CreateBuyOrder(buyOrderRequest);
+
+        return RedirectToAction(nameof(Orders));
     }
 }
