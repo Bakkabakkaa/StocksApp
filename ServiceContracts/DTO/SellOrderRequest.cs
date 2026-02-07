@@ -36,7 +36,7 @@ public class SellOrderRequest : IValidatableObject
     /// The price of each stock (share)
     /// </summary>
     [Range(1, 10000, ErrorMessage = "The maximum price of stock is 10000. Minimum is 1")]
-    public uint Price { get; set; }
+    public double Price { get; set; }
 
     /// <summary>
     /// Converts the current object of SellOrderRequest into a new object

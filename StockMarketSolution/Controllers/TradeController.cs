@@ -69,7 +69,7 @@ public class TradeController : Controller
 
     [HttpPost]
     [Route("[action]")]
-    public IActionResult SellOrder(BuyOrderRequest buyOrderRequest)
+    public IActionResult BuyOrder(BuyOrderRequest buyOrderRequest)
     {
         // Update date of order
         buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
