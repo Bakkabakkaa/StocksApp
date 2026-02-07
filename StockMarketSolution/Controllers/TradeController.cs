@@ -121,4 +121,23 @@ public class TradeController : Controller
 
         return RedirectToAction(nameof(Orders));
     }
+
+    [Route("[action]")]
+    public IActionResult Orders()
+    {
+        // Invoke service methods
+        List<BuyOrderResponse> buyOrderResponses = _stockService.GetBuyOrders();
+        List<SellOrderResponse> sellOrderResponses = _stockService.GetSellOrders();
+        
+        // Create model object
+        Orders orders = new Orders()
+        {
+            BuyOrders = buyOrderResponses,
+            SellOrders = sellOrderResponses
+        };
+
+        ViewBag.TradingOptions = _tradingOptions;
+
+        return View(orders);
+    }
 }
