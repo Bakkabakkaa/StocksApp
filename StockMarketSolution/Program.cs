@@ -1,3 +1,5 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using Services;
 using StockMarketSolution;
@@ -9,8 +11,17 @@ builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("Tra
 builder.Services.AddSingleton<IStockService, StockService>();
 builder.Services.AddSingleton<IFinnhubService, FinnhubService>();
 builder.Services.AddHttpClient();
+builder.Services.AddDbContext<StockMarketDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 var app = builder.Build();
+
+if (builder.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.UseStaticFiles();
 app.MapControllers();
