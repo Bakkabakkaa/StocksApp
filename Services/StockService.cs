@@ -7,13 +7,11 @@ namespace Services;
 
 public class StockService : IStockService
 {
-    private readonly List<BuyOrder> _buyOrders;
-    private readonly List<SellOrder> _sellOrders;
+    private readonly StockMarketDbContext _db;
 
-    public StockService()
+    public StockService(StockMarketDbContext stockMarketDbContext)
     {
-        _buyOrders = new List<BuyOrder>();
-        _sellOrders = new List<SellOrder>();
+        _db = stockMarketDbContext;
     }
     public BuyOrderResponse CreateBuyOrder(BuyOrderRequest? buyOrderRequest)
     {
@@ -31,7 +29,7 @@ public class StockService : IStockService
         buyOrder.BuyOrderID = Guid.NewGuid();
         
         // Add buyOrder object to buy orders list
-        _buyOrders.Add(buyOrder);
+        _db.BuyOrders.Add(buyOrder);
 
         // Convert the BuyOrder object into BuyOrderResponse type
         return buyOrder.ToBuyOrderResponse();
@@ -53,7 +51,7 @@ public class StockService : IStockService
         sellOrder.SellOrderID = Guid.NewGuid();
         
         // Add sellOrder object to sell orders list
-        _sellOrders.Add(sellOrder);
+        _db.SellOrders.Add(sellOrder);
 
         // Convert the SellOrder object into SellOrderResponse type
         return sellOrder.ToSellOrderResponse();
@@ -62,7 +60,7 @@ public class StockService : IStockService
     public List<BuyOrderResponse> GetBuyOrders()
     {
         // Convert all BuyOrder objects into BuyOrderResponse objects
-        return _buyOrders
+        return _db.BuyOrders
             .OrderByDescending(temp => temp.DateAndTimeOfOrder)
             .Select(temp => temp.ToBuyOrderResponse()).ToList();
     }
@@ -70,7 +68,7 @@ public class StockService : IStockService
     public List<SellOrderResponse> GetSellOrders()
     {
         // Convert all SellOrder objects into SellOrderResponse objects
-        return _sellOrders
+        return _db.SellOrders
             .OrderByDescending(temp => temp.DateAndTimeOfOrder)
             .Select(temp => temp.ToSellOrderResponse()).ToList();
     }
