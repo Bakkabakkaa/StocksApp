@@ -6,7 +6,7 @@ namespace ServiceContracts.DTO;
 /// DTO class that represents a sell order -
 /// that can be used as return type of Stocks service
 /// </summary>
-public class SellOrderResponse
+public class SellOrderResponse : IOrderResponse
 {
     /// <summary>
     /// The unique ID of the sell order
@@ -42,6 +42,8 @@ public class SellOrderResponse
     /// The price of each stock (share)
     /// </summary>
     public double Price { get; set; }
+
+    public OrderType TypeOfOrder => OrderType.SellOrder;
 
     /// <summary>
     /// Total sales amount
