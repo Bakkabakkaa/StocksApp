@@ -142,7 +142,8 @@ public class TradeController : Controller
         return View(orders);
     }
 
-    public async Task<IActionResult> OrdersPdf()
+    [Route("[action]")]
+    public async Task<IActionResult> OrdersPDF()
     {
         // Get list of orders
         List<IOrderResponse> orders = new List<IOrderResponse>();
@@ -154,7 +155,7 @@ public class TradeController : Controller
         ViewBag.TradingOptions = _tradingOptions;
         
         // Return view as pdf
-        return new ViewAsPdf("OrderPDF", orders, ViewData)
+        return new ViewAsPdf("OrdersPDF", orders, ViewData)
         {
             PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
             PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
