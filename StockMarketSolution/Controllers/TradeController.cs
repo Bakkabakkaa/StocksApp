@@ -69,7 +69,7 @@ public class TradeController : Controller
 
     [HttpPost]
     [Route("[action]")]
-    public IActionResult BuyOrder(BuyOrderRequest buyOrderRequest)
+    public async Task<IActionResult> BuyOrder(BuyOrderRequest buyOrderRequest)
     {
         // Update date of order
         buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
@@ -93,14 +93,14 @@ public class TradeController : Controller
             return View("Index", stockTrade);
         }
         // Invoke service method
-        BuyOrderResponse buyOrderResponse = _stockService.CreateBuyOrder(buyOrderRequest);
+        BuyOrderResponse buyOrderResponse = await _stockService.CreateBuyOrder(buyOrderRequest);
 
         return RedirectToAction(nameof(Orders));
     }
 
     [HttpPost]
     [Route("[action]")]
-    public IActionResult SellOrder(SellOrderRequest sellOrderRequest)
+    public async Task<IActionResult> SellOrder(SellOrderRequest sellOrderRequest)
     {
         // Update date of order
         sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
@@ -117,17 +117,17 @@ public class TradeController : Controller
         }
         
         // Invoke service method
-        SellOrderResponse sellOrderResponse = _stockService.CreateSellOrder(sellOrderRequest);
+        SellOrderResponse sellOrderResponse = await _stockService.CreateSellOrder(sellOrderRequest);
 
         return RedirectToAction(nameof(Orders));
     }
 
     [Route("[action]")]
-    public IActionResult Orders()
+    public async Task<IActionResult> Orders()
     {
         // Invoke service methods
-        List<BuyOrderResponse> buyOrderResponses = _stockService.GetBuyOrders();
-        List<SellOrderResponse> sellOrderResponses = _stockService.GetSellOrders();
+        List<BuyOrderResponse> buyOrderResponses = await _stockService.GetBuyOrders();
+        List<SellOrderResponse> sellOrderResponses = await _stockService.GetSellOrders();
         
         // Create model object
         Orders orders = new Orders()

@@ -1,4 +1,5 @@
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services.Helpers;
@@ -13,7 +14,7 @@ public class StockService : IStockService
     {
         _db = stockMarketDbContext;
     }
-    public BuyOrderResponse CreateBuyOrder(BuyOrderRequest? buyOrderRequest)
+    public async Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? buyOrderRequest)
     {
         // Validation: buyOrderRequest can't be null
         if (buyOrderRequest == null)
@@ -30,12 +31,13 @@ public class StockService : IStockService
         
         // Add buyOrder object to buy orders list
         _db.BuyOrders.Add(buyOrder);
+        await _db.SaveChangesAsync();
 
         // Convert the BuyOrder object into BuyOrderResponse type
         return buyOrder.ToBuyOrderResponse();
     }
 
-    public SellOrderResponse CreateSellOrder(SellOrderRequest? sellOrderRequest)
+    public async Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest)
     {
         // Validation: sellOrderRequest can't be null
         if (sellOrderRequest == null)
@@ -52,24 +54,25 @@ public class StockService : IStockService
         
         // Add sellOrder object to sell orders list
         _db.SellOrders.Add(sellOrder);
+        await _db.SaveChangesAsync();
 
         // Convert the SellOrder object into SellOrderResponse type
         return sellOrder.ToSellOrderResponse();
     }
 
-    public List<BuyOrderResponse> GetBuyOrders()
+    public async Task<List<BuyOrderResponse>> GetBuyOrders()
     {
         // Convert all BuyOrder objects into BuyOrderResponse objects
-        return _db.BuyOrders
+        return await _db.BuyOrders
             .OrderByDescending(temp => temp.DateAndTimeOfOrder)
-            .Select(temp => temp.ToBuyOrderResponse()).ToList();
+            .Select(temp => temp.ToBuyOrderResponse()).ToListAsync();
     }
 
-    public List<SellOrderResponse> GetSellOrders()
+    public async Task<List<SellOrderResponse>> GetSellOrders()
     {
         // Convert all SellOrder objects into SellOrderResponse objects
-        return _db.SellOrders
+        return await _db.SellOrders
             .OrderByDescending(temp => temp.DateAndTimeOfOrder)
-            .Select(temp => temp.ToSellOrderResponse()).ToList();
+            .Select(temp => temp.ToSellOrderResponse()).ToListAsync();
     }
 }

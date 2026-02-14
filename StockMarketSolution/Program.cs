@@ -8,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("TradingOptions"));
-builder.Services.AddSingleton<IStockService, StockService>();
-builder.Services.AddSingleton<IFinnhubService, FinnhubService>();
+builder.Services.AddTransient<IStockService, StockService>();
+builder.Services.AddTransient<IFinnhubService, FinnhubService>();
 builder.Services.AddHttpClient();
 builder.Services.AddDbContext<StockMarketDbContext>(options =>
 {
