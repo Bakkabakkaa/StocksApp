@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using StockMarketSolution.Models;
@@ -139,5 +140,24 @@ public class TradeController : Controller
         ViewBag.TradingOptions = _tradingOptions;
 
         return View(orders);
+    }
+
+    public async Task<IActionResult> OrdersPdf()
+    {
+        // Get list of orders
+        List<IOrderResponse> orders = new List<IOrderResponse>();
+        orders.AddRange(await _stockService.GetBuyOrders());
+        orders.AddRange(await _stockService.GetSellOrders());
+
+        orders = orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
+
+        ViewBag.TradingOptions = _tradingOptions;
+        
+        // Return view as pdf
+        return new ViewAsPdf("OrderPDF", orders, ViewData)
+        {
+            PageMargins = new Rotativa.AspNetCore.Options.Margins() { Top = 20, Right = 20, Bottom = 20, Left = 20 },
+            PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+        };
     }
 }
