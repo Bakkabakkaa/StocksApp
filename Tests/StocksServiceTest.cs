@@ -1,4 +1,6 @@
-﻿using ServiceContracts;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
 
@@ -10,127 +12,127 @@ public class StocksServiceTest
 
     public StocksServiceTest()
     {
-        _stockService = new StockService();
+        _stockService = new StockService(new StockMarketDbContext(new DbContextOptionsBuilder<StockMarketDbContext>().Options));
     }
 
     #region CreateBuyOrder
 
     [Fact]
-    public void CreateBuyOrder_NullBuyOrder_ToBeArgumentsNullException()
+    public async Task CreateBuyOrder_NullBuyOrder_ToBeArgumentsNullException()
     {
         // Arrange
         BuyOrderRequest? buyOrderRequest = null;
         
         // Assert
-        Assert.Throws<ArgumentNullException>(() =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(0)]
-    public void CreateBuyOrder_QuantityIsLessThanMinimum_ToBeArgumentException(uint buyOrderQuantity)
+    public async Task CreateBuyOrder_QuantityIsLessThanMinimum_ToBeArgumentException(uint buyOrderQuantity)
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         buyOrderRequest.Quantity = buyOrderQuantity;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(100001)]
-    public void CreateBuyOrder_QuantityIsGreaterThanMaximum_ToBeArgumentException(uint buyOrderQuantity)
+    public async Task CreateBuyOrder_QuantityIsGreaterThanMaximum_ToBeArgumentException(uint buyOrderQuantity)
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         buyOrderRequest.Quantity = buyOrderQuantity;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(0)]
-    public void CreateBuyOrder_PriceIsLessThanMinimum_ToBeArgumentException(uint buyOrderPrice)
+    public async Task CreateBuyOrder_PriceIsLessThanMinimum_ToBeArgumentException(uint buyOrderPrice)
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         buyOrderRequest.Price = buyOrderPrice;
 
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
     
     [Theory]
     [InlineData(10001)]
-    public void CreateBuyOrder_PriceIsGreaterThanMaximum_ToBeArgumentException(uint buyOrderPrice)
+    public async Task CreateBuyOrder_PriceIsGreaterThanMaximum_ToBeArgumentException(uint buyOrderPrice)
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         buyOrderRequest.Price = buyOrderPrice;
 
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
 
     [Fact]
-    public void CreateBuyOrder_StockSymbolIsNull_ToBeArgumentException()
+    public async Task CreateBuyOrder_StockSymbolIsNull_ToBeArgumentException()
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         buyOrderRequest.StockSymbol = null;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
     
     [Fact]
-    public void CreateBuyOrder_DateOfOrderIsLessThanYear2000_ToBeArgumentException()
+    public async Task CreateBuyOrder_DateOfOrderIsLessThanYear2000_ToBeArgumentException()
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         buyOrderRequest.DateAndTimeOfOrder = Convert.ToDateTime("1999-12-31");
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateBuyOrder(buyOrderRequest);
+            await _stockService.CreateBuyOrder(buyOrderRequest);
         });
     }
 
     [Fact]
-    public void CreateBuyOrder_ValidData_ToBeSuccessful()
+    public async Task CreateBuyOrder_ValidData_ToBeSuccessful()
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
         
         // Act
-        BuyOrderResponse buyOrderResponse = _stockService.CreateBuyOrder(buyOrderRequest);
+        BuyOrderResponse buyOrderResponse = await _stockService.CreateBuyOrder(buyOrderRequest);
         
         // Assert
         Assert.NotEqual(Guid.Empty, buyOrderResponse.BuyOrderID);
@@ -142,118 +144,118 @@ public class StocksServiceTest
     #region CreateSellOrder
 
     [Fact]
-    public void CreateSellOrder_NullSellOrder_ToBeArgumentNullException()
+    public async Task CreateSellOrder_NullSellOrder_ToBeArgumentNullException()
     {
         // Arrange
         SellOrderRequest? sellOrderRequest = null;
         
         // Assert
-        Assert.Throws<ArgumentNullException>(() =>
+        await Assert.ThrowsAsync<ArgumentNullException>(async () =>
         {
             // Act
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(0)]
-    public void CreateSellOrder_QuantityIsLessThanMinimum_ToBeArgumentException(uint sellOrderQuantity)
+    public async Task CreateSellOrder_QuantityIsLessThanMinimum_ToBeArgumentException(uint sellOrderQuantity)
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         sellOrderRequest.Quantity = sellOrderQuantity;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(100001)]
-    public void CreateSellOrder_QuantityIsGreaterThanMaximum_ToBeArgumentException(uint sellOrderQuantity)
+    public async Task CreateSellOrder_QuantityIsGreaterThanMaximum_ToBeArgumentException(uint sellOrderQuantity)
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         sellOrderRequest.Quantity = sellOrderQuantity;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(0)]
-    public void CreateSellOrder_PriceIsLessThanMinimum_ToBeArgumentException(uint sellOrderPrice)
+    public async Task CreateSellOrder_PriceIsLessThanMinimum_ToBeArgumentException(uint sellOrderPrice)
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         sellOrderRequest.Price = sellOrderPrice;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Theory]
     [InlineData(10001)]
-    public void CreateSellOrder_PriceIsGreaterThanMaximum_ToBeArgumentException(uint sellOrderPrice)
+    public async Task CreateSellOrder_PriceIsGreaterThanMaximum_ToBeArgumentException(uint sellOrderPrice)
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         sellOrderRequest.Price = sellOrderPrice;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Fact]
-    public void CreateSellOrder_StockSymbolIsNull_ToBeArgumentException()
+    public async Task CreateSellOrder_StockSymbolIsNull_ToBeArgumentException()
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         sellOrderRequest.StockSymbol = null;
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
             // Act
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Fact]
-    public void CreateSellOrder_DateOfOrderIsLessThanYear2000_ToBeArgumentException()
+    public async Task CreateSellOrder_DateOfOrderIsLessThanYear2000_ToBeArgumentException()
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         sellOrderRequest.DateAndTimeOfOrder = Convert.ToDateTime("1999-12-31");
         
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        await Assert.ThrowsAsync<ArgumentException>(async () =>
         {
-            _stockService.CreateSellOrder(sellOrderRequest);
+            await _stockService.CreateSellOrder(sellOrderRequest);
         });
     }
 
     [Fact]
-    public void CreateSellOrder_ValidData_ToBeSuccessful()
+    public async Task CreateSellOrder_ValidData_ToBeSuccessful()
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
         
         // Act
-        SellOrderResponse sellOrderResponse = _stockService.CreateSellOrder(sellOrderRequest);
+        SellOrderResponse sellOrderResponse = await _stockService.CreateSellOrder(sellOrderRequest);
         
         // Assert
         Assert.NotEqual(Guid.Empty, sellOrderResponse.SellOrderID);
@@ -264,24 +266,24 @@ public class StocksServiceTest
     #region GetBuyOrders
 
     [Fact]
-    public void GetAllBuyOrders_DefaultList_ToBeEmpty()
+    public async Task GetAllBuyOrders_DefaultList_ToBeEmpty()
     {
         // Act
-        List<BuyOrderResponse> buyOrderResponseList = _stockService.GetBuyOrders();
+        List<BuyOrderResponse> buyOrderResponseList = await _stockService.GetBuyOrders();
         
         // Assert
         Assert.Empty(buyOrderResponseList);
     }
 
     [Fact]
-    public void GetAllBuyOrders_WithFewBuyOrders_ToBeSuccessful()
+    public async Task GetAllBuyOrders_WithFewBuyOrders_ToBeSuccessful()
     {
         // Arrange
         BuyOrderRequest buyOrderRequest = CreateValidBuyOrderRequest();
-        BuyOrderResponse buyOrderResponseFromAdd = _stockService.CreateBuyOrder(buyOrderRequest);
+        BuyOrderResponse buyOrderResponseFromAdd = await _stockService.CreateBuyOrder(buyOrderRequest);
         
         // Act
-        List<BuyOrderResponse> buyOrderResponseListFromGet = _stockService.GetBuyOrders();
+        List<BuyOrderResponse> buyOrderResponseListFromGet = await _stockService.GetBuyOrders();
         
         // Assert
         Assert.Contains(buyOrderResponseFromAdd, buyOrderResponseListFromGet);
@@ -292,24 +294,24 @@ public class StocksServiceTest
     #region GetSellOrders
 
     [Fact]
-    public void GetAllSellOrders_DefaultList_ToBeEmpty()
+    public async Task GetAllSellOrders_DefaultList_ToBeEmpty()
     {
         // Act
-        List<SellOrderResponse> sellOrderResponses = _stockService.GetSellOrders();
+        List<SellOrderResponse> sellOrderResponses = await _stockService.GetSellOrders();
         
         // Assert
         Assert.Empty(sellOrderResponses);
     }
 
     [Fact]
-    public void GetAllSellOrders_WithFewSellOrders_ToBeSuccessful()
+    public async Task GetAllSellOrders_WithFewSellOrders_ToBeSuccessful()
     {
         // Arrange
         SellOrderRequest sellOrderRequest = CreateValidSellOrderRequest();
-        SellOrderResponse sellOrderResponseFromAdd = _stockService.CreateSellOrder(sellOrderRequest);
+        SellOrderResponse sellOrderResponseFromAdd = await _stockService.CreateSellOrder(sellOrderRequest);
         
         // Act
-        List<SellOrderResponse> sellOrderResponseListFromGet = _stockService.GetSellOrders();
+        List<SellOrderResponse> sellOrderResponseListFromGet = await _stockService.GetSellOrders();
         
         // Assert
         Assert.Contains(sellOrderResponseFromAdd, sellOrderResponseListFromGet);
