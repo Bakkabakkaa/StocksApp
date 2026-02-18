@@ -8,11 +8,11 @@ namespace Services;
 
 public class StockService : IStockService
 {
-    private readonly StockMarketDbContext _db;
+    private readonly ApplicationDbContext _db;
 
-    public StockService(StockMarketDbContext stockMarketDbContext)
+    public StockService(ApplicationDbContext applicationDbContext)
     {
-        _db = stockMarketDbContext;
+        _db = applicationDbContext;
     }
     public async Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? buyOrderRequest)
     {

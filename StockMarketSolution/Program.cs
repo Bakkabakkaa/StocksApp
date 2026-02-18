@@ -11,7 +11,7 @@ builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("Tra
 builder.Services.AddTransient<IStockService, StockService>();
 builder.Services.AddTransient<IFinnhubService, FinnhubService>();
 builder.Services.AddHttpClient();
-builder.Services.AddDbContext<StockMarketDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });

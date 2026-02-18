@@ -12,7 +12,7 @@ public class StocksServiceTest
 
     public StocksServiceTest()
     {
-        _stockService = new StockService(new StockMarketDbContext(new DbContextOptionsBuilder<StockMarketDbContext>().Options));
+        _stockService = new StockService(new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>().Options));
     }
 
     #region CreateBuyOrder
