@@ -1,6 +1,58 @@
+using Entities;
+using Microsoft.EntityFrameworkCore;
+using RepositoryContracts;
+
 namespace Repositories;
 
-public class StocksRepository
+public class StocksRepository : IStocksRepository
 {
+    private readonly ApplicationDbContext _db;
+
+    /// <summary>
+    /// Constructor of StocksRepository class that executes when a new
+    /// object is created for the class
+    /// </summary>
+    /// <param name="stockMarketDbContext"></param>
+    public StocksRepository(ApplicationDbContext stockMarketDbContext)
+    {
+        _db = stockMarketDbContext;
+    }
     
+    public async Task<BuyOrder> CreateBuyOrder(BuyOrder buyOrder)
+    {
+        // Add BuyOrder object to BuyOrder list
+        _db.BuyOrders.Add(buyOrder);
+        await _db.SaveChangesAsync();
+
+        return buyOrder;
+    }
+
+    public async Task<SellOrder> CreateSellOrder(SellOrder sellOrder)
+    {
+        // Add SellOrder object to SellOrder list
+        _db.SellOrders.Add(sellOrder);
+        await _db.SaveChangesAsync();
+
+        return sellOrder;
+    }
+
+    public async Task<List<BuyOrder>> GetBuyOrders()
+    {
+        // Get BuyOrder list
+        List<BuyOrder> buyOrders = await _db.BuyOrders
+            .OrderByDescending(temp => temp.DateAndTimeOfOrder)
+            .ToListAsync();
+
+        return buyOrders;
+    }
+
+    public async Task<List<SellOrder>> GetSellOrders()
+    {
+        // Get SellOrder list
+        List<SellOrder> sellOrders = await _db.SellOrders
+            .OrderByDescending(temp => temp.DateAndTimeOfOrder)
+            .ToListAsync();
+
+        return sellOrders;
+    }
 }
