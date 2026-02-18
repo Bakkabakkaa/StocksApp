@@ -35,18 +35,18 @@ public class TradeController : Controller
     [Route("/")]
     [Route("[action]")]
     [Route("~/[controller]")]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         // Reset stock symbol if not exists
         if (string.IsNullOrEmpty(_tradingOptions.DefaultStockSymbol))
             _tradingOptions.DefaultStockSymbol = "MSFT";
         
         // Get company profile from API server
-        Dictionary<string, object>? companyProfileDictionary =
+        Dictionary<string, object>? companyProfileDictionary = await 
             _finnhubService.GetCompanyProfile(_tradingOptions.DefaultStockSymbol);
         
         // Get stock price quotes from API server
-        Dictionary<string, object>? stockQuoteDictionary =
+        Dictionary<string, object>? stockQuoteDictionary = await 
             _finnhubService.GetStockPriceQuote(_tradingOptions.DefaultStockSymbol);
 
         // Create model object
@@ -56,9 +56,10 @@ public class TradeController : Controller
         {
             stockTrade = new StockTrade()
             {
-                StockSymbol = Convert.ToString(companyProfileDictionary["ticker"]),
-                StockName = Convert.ToString(companyProfileDictionary["name"]),
-                Price = ((JsonElement)stockQuoteDictionary["c"]).GetDouble()
+                StockSymbol = companyProfileDictionary["ticker"].ToString(),
+                StockName = companyProfileDictionary["name"].ToString(),
+                Quantity = _tradingOptions.DefaultOrderQuantity ?? 0,
+                Price = Convert.ToDouble(stockQuoteDictionary["c"].ToString())
             };
         }
         
