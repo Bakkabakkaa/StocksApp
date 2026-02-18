@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Services\Services.csproj" />
+      <ProjectReference Include="..\StockMarketSolution\StockMarketSolution.csproj" />
     </ItemGroup>
 
 </Project>
