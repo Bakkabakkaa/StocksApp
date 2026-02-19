@@ -31,7 +31,12 @@
                 </div>
 
                 <div class="flex-1 text-right">
-                    <a href="~/Stocks/Explore?showAll=true" class="mr">Show all stocks</a>
+                    <a asp-controller="Stocks"
+                       asp-action="Explore"
+                       asp-route-showAll="true"
+                       class="mr">
+                        Show all stocks
+                    </a>
                 </div>
             </div>
 
@@ -42,16 +47,25 @@
                     <li>
                         @if (Context.Request.Query.ContainsKey("showAll"))
                         {
-                            <a href="~/Stocks/Explore/@stock.StockSymbol?showAll=@Context.Request.Query["showAll"]">
+                            <a asp-controller="Stocks"
+                               asp-action="Explore"
+                               asp-route-stock="@stock.StockSymbol"
+                               asp-route-showAll="@Context.Request.Query["showAll"]">
+
                                 <h4>@stock.StockName</h4>
                                 <div class="text-grey">(@stock.StockSymbol)</div>
+
                             </a>
                         }
                         else
                         {
-                            <a href="~/Stocks/Explore/@stock.StockSymbol">
+                            <a asp-controller="Stocks"
+                               asp-action="Explore"
+                               asp-route-stock="@stock.StockSymbol">
+
                                 <h4>@stock.StockName</h4>
                                 <div class="text-grey">(@stock.StockSymbol)</div>
+
                             </a>
                         }
 
@@ -68,9 +82,9 @@
     </div>
 
     <div class="flex-1" id="stock-details">
-        @if (ViewBag.Stock != null)
+        @if (ViewBag.stock != null)
         {
-            <vc:selected-stock stock-symbol="@ViewBag.Stock"></vc:selected-stock>
+            <vc:selected-stock stock-symbol="@ViewBag.stock"></vc:selected-stock>
         }
     </div>
 </div>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -58,7 +59,11 @@ public class TradeController : Controller
                 StockSymbol = companyProfileDictionary["ticker"].ToString(),
                 StockName = companyProfileDictionary["name"].ToString(),
                 Quantity = _tradingOptions.DefaultOrderQuantity ?? 0,
-                Price = Convert.ToDouble(stockQuoteDictionary["c"].ToString())
+                Price = double.Parse(
+                    stockQuoteDictionary["c"].ToString(),
+                    CultureInfo.InvariantCulture
+                )
+
             };
         }
         

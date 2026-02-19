@@ -55,5 +55,5 @@ var unsubscribe = function (symbol) {
 
 //when the page is being closed, unsubscribe from the WebSocket
 window.onunload = function () {
-    unsubscribe(stockSsymbol);
+    unsubscribe(stockSymbol);
 };

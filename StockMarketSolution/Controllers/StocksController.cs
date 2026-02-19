@@ -53,7 +53,7 @@ public class StocksController : Controller
                 .ToList();
         }
 
-        ViewBag.Stock = stock;
+        ViewBag.stock = stock;
         return View(stocks);
     }
     
