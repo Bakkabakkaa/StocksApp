@@ -17,7 +17,7 @@ public class FinnhubRepository : IFinnhubRepository
     public async Task<Dictionary<string, object>?> GetCompanyProfile(string stockSymbol)
     {
         Uri url = new Uri(
-            $"https://finnhub.io/api/v1/quote?symbol={stockSymbol}&token={_configuration["FinnhubToken"]}");
+            $"https://finnhub.io/api/v1/stock/profile2?symbol={stockSymbol}&token={_configuration["FinnhubToken"]}");
         
         return await SendRequestAsync<Dictionary<string, object>>(url);
     }
