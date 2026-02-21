@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RepositoryContracts;
+using Serilog;
 
 namespace Repositories;
 
@@ -8,14 +10,22 @@ public class FinnhubRepository : IFinnhubRepository
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<FinnhubRepository> _logger;
+    private readonly IDiagnosticContext _diagnosticContext;
 
-    public FinnhubRepository(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    public FinnhubRepository(IHttpClientFactory httpClientFactory, IConfiguration configuration,
+        ILogger<FinnhubRepository> logger, IDiagnosticContext diagnosticContext)
     {
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
+        _logger = logger;
+        _diagnosticContext = diagnosticContext;
     }
     public async Task<Dictionary<string, object>?> GetCompanyProfile(string stockSymbol)
     {
+        // Log
+        _logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(GetCompanyProfile));
+        
         Uri url = new Uri(
             $"https://finnhub.io/api/v1/stock/profile2?symbol={stockSymbol}&token={_configuration["FinnhubToken"]}");
         
@@ -24,6 +34,9 @@ public class FinnhubRepository : IFinnhubRepository
 
     public async Task<Dictionary<string, object>?> GetStockPriceQuote(string stockSymbol)
     {
+        // Log
+        _logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(GetStockPriceQuote));
+        
         Uri url = new Uri(
             $"https://finnhub.io/api/v1/quote?symbol={stockSymbol}&token={_configuration["FinnhubToken"]}");
 
@@ -32,6 +45,9 @@ public class FinnhubRepository : IFinnhubRepository
 
     public async Task<List<Dictionary<string, string>>?> GetStocks()
     {
+        // Log
+        _logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(GetStocks));
+        
         Uri url = new Uri(
             $"https://finnhub.io/api/v1/stock/symbol?exchange=US&token={_configuration["FinnhubToken"]}");
         
@@ -40,6 +56,9 @@ public class FinnhubRepository : IFinnhubRepository
 
     public async Task<Dictionary<string, object>?> SearchStocks(string stockSymbolToSearch)
     {
+        // Log
+        _logger.LogInformation("In {ClassName}.{MethodName}", nameof(FinnhubRepository), nameof(SearchStocks));
+
         Uri url = new Uri(
             $"https://finnhub.io/api/v1/search?q={stockSymbolToSearch}&token={_configuration["FinnhubToken"]}");
 
