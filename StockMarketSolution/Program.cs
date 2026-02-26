@@ -6,6 +6,7 @@ using Serilog;
 using ServiceContracts;
 using Services;
 using StockMarketSolution;
+using StockMarketSolution.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,6 @@ builder.Services.AddTransient<IStockService, StockService>();
 builder.Services.AddTransient<IStocksRepository, StocksRepository>();
 builder.Services.AddTransient<IFinnhubRepository, FinnhubRepository>();
 builder.Services.AddTransient<IFinnhubService, FinnhubService>();
-builder.Services.AddHttpClient();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -43,6 +43,11 @@ var app = builder.Build();
 if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
 }
 
 Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
