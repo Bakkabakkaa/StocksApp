@@ -14,48 +14,51 @@ namespace StockMarketSolution.Controllers;
 public class TradeController : Controller
 {
     private readonly TradingOptions _tradingOptions;
-    private readonly IStockService _stockService;
-    private readonly IFinnhubService _finnhubService;
     private readonly IConfiguration _configuration;
-    private readonly ILogger<TradeController> _logger;
+    
+    private readonly IBuyOrdersService _stocksBuyOrdersService;
+    private readonly ISellOrdersService _stocksSellOrdersService;
+    
+    private readonly IFinnhubSearchStocksService _finnhubSearchStocksService;
+    private readonly IFinnhubCompanyProfileService _finnhubCompanyProfileService;
+    private readonly IFinnhubStockPriceQuoteService _finnhubStockPriceQuoteService;
 
     /// <summary>
     /// Constructor for TradeController that executes when a new object is created for the class
     /// </summary>
     /// <param name="tradingOptions">Injecting TradeOptions config through Options pattern</param>
-    /// <param name="stocksService">Injecting StocksService</param>
-    /// <param name="finnhubService">Injecting FinnhubService</param>
+    /// <param name="stocksBuyOrdersService">Injecting StocksService</param>
+    /// <param name="stocksSellOrdersService">Injecting StocksService</param>
+    /// <param name="finnhubSearchStocksService">Injecting FinnhubSearchStocksService</param>
+    /// <param name="finnhubCompanyProfileService">Injecting FinnhubCompanyProfileService</param>
+    /// <param name="finnhubStockPriceQuoteService">Injecting FinnhubStockPriceQuoteService</param>
     /// <param name="configuration">Injecting IConfiguration</param>
-    /// <param name="logger">Injecting ILogger</param>
-    public TradeController(IOptions<TradingOptions> tradingOptions, IStockService stockService,
-        IFinnhubService finnhubService, IConfiguration configuration, ILogger<TradeController> logger)
+    public TradeController(IOptions<TradingOptions> tradingOptions, IBuyOrdersService stocksBuyOrdersService, ISellOrdersService stocksSellOrdersService, IFinnhubSearchStocksService finnhubSearchStocksService, IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IConfiguration configuration)
     {
         _tradingOptions = tradingOptions.Value;
-        _stockService = stockService;
-        _finnhubService = finnhubService;
+        _stocksBuyOrdersService = stocksBuyOrdersService;
+        _stocksSellOrdersService = stocksSellOrdersService;
+        _finnhubSearchStocksService = finnhubSearchStocksService;
+        _finnhubCompanyProfileService = finnhubCompanyProfileService;
+        _finnhubStockPriceQuoteService = finnhubStockPriceQuoteService;
         _configuration = configuration;
-        _logger = logger;
     }
 
     [Route("[action]/{stockSymbol}")]
     [Route("~/[controller]/{stockSymbol}")]
     public async Task<IActionResult> Index(string stockSymbol)
     {
-        // Logger
-        _logger.LogInformation("In TradeController.Index() action method");
-        _logger.LogDebug("stockSymbol: {stockSymbol}", stockSymbol);
-        
         // Reset stock symbol if not exists
         if (string.IsNullOrEmpty(stockSymbol))
             stockSymbol = "MSFT";
         
         // Get company profile from API server
         Dictionary<string, object>? companyProfileDictionary = await 
-            _finnhubService.GetCompanyProfile(stockSymbol);
+            _finnhubCompanyProfileService.GetCompanyProfile(stockSymbol);
         
         // Get stock price quotes from API server
         Dictionary<string, object>? stockQuoteDictionary = await 
-            _finnhubService.GetStockPriceQuote(stockSymbol);
+            _finnhubStockPriceQuoteService.GetStockPriceQuote(stockSymbol);
 
         // Create model object
         StockTrade stockTrade = new StockTrade() { StockSymbol = stockSymbol };
@@ -87,7 +90,7 @@ public class TradeController : Controller
     public async Task<IActionResult> BuyOrder(BuyOrderRequest orderRequest)
     {
         // Invoke service method
-        BuyOrderResponse buyOrderResponse = await _stockService.CreateBuyOrder(orderRequest);
+        BuyOrderResponse buyOrderResponse = await _stocksBuyOrdersService.CreateBuyOrder(orderRequest);
 
         return RedirectToAction(nameof(Orders));
     }
@@ -98,7 +101,7 @@ public class TradeController : Controller
     public async Task<IActionResult> SellOrder(SellOrderRequest orderRequest)
     {
         // Invoke service method
-        SellOrderResponse sellOrderResponse = await _stockService.CreateSellOrder(orderRequest);
+        SellOrderResponse sellOrderResponse = await _stocksSellOrdersService.CreateSellOrder(orderRequest);
 
         return RedirectToAction(nameof(Orders));
     }
@@ -107,8 +110,8 @@ public class TradeController : Controller
     public async Task<IActionResult> Orders()
     {
         // Invoke service methods
-        List<BuyOrderResponse> buyOrderResponses = await _stockService.GetBuyOrders();
-        List<SellOrderResponse> sellOrderResponses = await _stockService.GetSellOrders();
+        List<BuyOrderResponse> buyOrderResponses = await _stocksBuyOrdersService.GetBuyOrders();
+        List<SellOrderResponse> sellOrderResponses = await _stocksSellOrdersService.GetSellOrders();
         
         // Create model object
         Orders orders = new Orders()
@@ -127,8 +130,8 @@ public class TradeController : Controller
     {
         // Get list of orders
         List<IOrderResponse> orders = new List<IOrderResponse>();
-        orders.AddRange(await _stockService.GetBuyOrders());
-        orders.AddRange(await _stockService.GetSellOrders());
+        orders.AddRange(await _stocksBuyOrdersService.GetBuyOrders());
+        orders.AddRange(await _stocksSellOrdersService.GetSellOrders());
 
         orders = orders.OrderByDescending(temp => temp.DateAndTimeOfOrder).ToList();
 

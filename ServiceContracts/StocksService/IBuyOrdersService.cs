@@ -6,7 +6,7 @@ namespace ServiceContracts;
 /// Represents Stocks service that includes
 /// operations like buy order, sell order
 /// </summary>
-public interface IStockService
+public interface IBuyOrdersService
 {
     /// <summary>
     /// Create a buy order
@@ -14,24 +14,10 @@ public interface IStockService
     /// <param name="buyOrderRequest">Buy order  object</param>
     /// <returns>Return buy order response</returns>
     Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? buyOrderRequest);
-    
-    /// <summary>
-    /// Creates a buy order
-    /// </summary>
-    /// <param name="sellOrderRequest">Sell order object</param>
-    /// <returns>Return sell order response</returns>
-    Task<SellOrderResponse> CreateSellOrder(SellOrderRequest? sellOrderRequest);
 
     /// <summary>
     /// Returns all existing buy orders
     /// </summary>
     /// <returns>Returns a list of objects of BuyOrder type</returns>
     Task<List<BuyOrderResponse>> GetBuyOrders();
-
-    /// <summary>
-    /// Returns all existing sell orders
-    /// </summary>
-    /// <returns>Returns a list of objects of SellOrder type</returns>
-    Task<List<SellOrderResponse>> GetSellOrders();
-
 }

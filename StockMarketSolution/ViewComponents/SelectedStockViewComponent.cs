@@ -7,8 +7,9 @@ namespace StockMarketSolution.ViewComponents;
 public class SelectedStockViewComponent : ViewComponent
 {
     private readonly TradingOptions _tradingOptions;
-    private readonly IStockService _stockService;
-    private readonly IFinnhubService _finnhubService;
+    private readonly IBuyOrdersService _stocksService;
+    private readonly IFinnhubCompanyProfileService _finnhubCompanyProfileService;
+    private readonly IFinnhubStockPriceQuoteService _finnhubStockPriceQuoteService;
     private readonly IConfiguration _configuration;
     
     /// <summary>
@@ -16,13 +17,15 @@ public class SelectedStockViewComponent : ViewComponent
     /// </summary>
     /// <param name="tradingOptions">Injecting TradeOptions config through Options pattern</param>
     /// <param name="stocksService">Injecting StocksService</param>
-    /// <param name="finnhubService">Injecting FinnhubService</param>
+    /// <param name="finnhubCompanyProfileService">Injecting finnhubCompanyProfileService</param>
+    /// <param name="finnhubStockPriceQuoteService">Injecting IFinnhubStockPriceQuoteService</param>
     /// <param name="configuration">Injecting IConfiguration</param>
-    public SelectedStockViewComponent(IOptions<TradingOptions> tradingOptions, IStockService stocksService, IFinnhubService finnhubService, IConfiguration configuration)
+    public SelectedStockViewComponent(IOptions<TradingOptions> tradingOptions, IBuyOrdersService stocksService, IFinnhubCompanyProfileService finnhubCompanyProfileService, IFinnhubStockPriceQuoteService finnhubStockPriceQuoteService, IConfiguration configuration)
     {
         _tradingOptions = tradingOptions.Value;
-        _stockService = stocksService;
-        _finnhubService = finnhubService;
+        _stocksService = stocksService;
+        _finnhubCompanyProfileService = finnhubCompanyProfileService;
+        _finnhubStockPriceQuoteService = finnhubStockPriceQuoteService;
         _configuration = configuration;
     }
 
@@ -32,8 +35,8 @@ public class SelectedStockViewComponent : ViewComponent
 
         if (stockSymbol != null)
         {
-            companyProfileDictionary = await _finnhubService.GetCompanyProfile(stockSymbol);
-            Dictionary<string, object>? stockPriceDictionary = await _finnhubService.GetStockPriceQuote(stockSymbol);
+            companyProfileDictionary = await _finnhubCompanyProfileService.GetCompanyProfile(stockSymbol);
+            Dictionary<string, object>? stockPriceDictionary = await _finnhubStockPriceQuoteService.GetStockPriceQuote(stockSymbol);
             if (stockPriceDictionary != null && companyProfileDictionary != null)
             {
                 companyProfileDictionary.Add("price", stockPriceDictionary["c"]);

@@ -9,21 +9,17 @@ namespace StockMarketSolution.Controllers;
 public class StocksController : Controller
 {
     private readonly TradingOptions _tradingOptions;
-    private readonly IFinnhubService _finnhubService;
-    private readonly ILogger<StocksController> _logger;
+    private readonly IFinnhubStocksService _finnhubStocksService;
     
     /// <summary>
     /// Constructor for TradeController that executes when a new object is created for the class
     /// </summary>
     /// <param name="tradingOptions">Injecting TradeOptions config through Options pattern</param>
-    /// <param name="finnhubService">Injecting FinnhubService</param>
-    /// /// <param name="logger">Injecting ILogger</param>
-    public StocksController(IOptions<TradingOptions> tradingOptions, IFinnhubService finnhubService,
-        ILogger<StocksController> logger)
+    /// <param name="finnhubStocksService">Injecting IFinnhubStocksService</param>
+    public StocksController(IOptions<TradingOptions> tradingOptions, IFinnhubStocksService finnhubStocksService)
     {
         _tradingOptions = tradingOptions.Value;
-        _finnhubService = finnhubService;
-        _logger = logger;
+        _finnhubStocksService = finnhubStocksService;
     }
 
     [Route("/")]
@@ -31,12 +27,8 @@ public class StocksController : Controller
     [Route("~/[action]/{stock?}")]
     public async Task<IActionResult> Explore(string? stock, bool showAll = false)
     {
-        // Logger
-        _logger.LogInformation("In StocksController.Explore() action method");
-        _logger.LogDebug("stocks: {stock}, showAll: {showAll}", stock, showAll);
-        
         // Get company profile from API server
-        List<Dictionary<string, string>>? stockDictionary = await _finnhubService.GetStocks();
+        List<Dictionary<string, string>>? stockDictionary = await _finnhubStocksService.GetStocks();
 
         List<Stock> stocks = new List<Stock>();
 
