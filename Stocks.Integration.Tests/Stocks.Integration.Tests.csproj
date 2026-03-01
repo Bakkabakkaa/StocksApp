@@ -8,7 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.17.0" />
         <PackageReference Include="coverlet.collector" Version="6.0.4"/>
+        <PackageReference Include="Fizzler.Systems.HtmlAgilityPack" Version="1.2.1" />
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.7" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.8" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
         <PackageReference Include="xunit" Version="2.9.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4"/>
@@ -19,7 +24,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\StockMarketSolution\StockMarketSolution.csproj" />
+      <ProjectReference Include="..\Stocks.Core\Stocks.Core.csproj" />
+      <ProjectReference Include="..\Stocks.Infrastructure\Stocks.Infrastructure.csproj" />
+      <ProjectReference Include="..\Stocks.Web\Stocks.Web.csproj" />
     </ItemGroup>
 
 </Project>
