@@ -27,7 +27,7 @@ public class StocksController : Controller
     [Route("~/[action]/{stock?}")]
     public async Task<IActionResult> Explore(string? stock, bool showAll = false)
     {
-        Console.WriteLine($"SYMBOL = {stock}");
+        Console.WriteLine($"PATH = {Request.Path} | STOCK = {stock}");
         // Get company profile from API server
         List<Dictionary<string, string>>? stockDictionary = await _finnhubStocksService.GetStocks();
 
