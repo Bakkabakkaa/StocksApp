@@ -18,5 +18,5 @@ https://github.com/user-attachments/assets/46dc1651-0aab-4165-b978-623a41c8af47
 dotnet user-secrets init --project StockMarketSolution  
 dotnet user-secrets set "FinnhubToken" "YOUR_API_KEY" --project StockMarketSolution
 
-API-ключ можно получить на [сайте]([url](https://finnhub.io/))
+API-ключ можно получить на сайте https://finnhub.io/
 
